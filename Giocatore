@@ -1,0 +1,166 @@
+package org.example;
+
+import java.util.Random;
+import java.util.Scanner;
+
+public class Giocatore extends Gioco{
+    Scanner scScelta = new Scanner(System.in);
+
+    private String nome = "";
+
+    public Giocatore() {
+        this.nome = nome;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    @Override
+    public void entrataCittà() {
+        System.out.println("------------------------------------------------------\nSei al'entrata della città.");
+        System.out.println("Una guardia è in piedi davanti a te.\n---\nCosa pensi di fare?\n---");
+        System.out.println("1 - Parli con la guardia.\n2 - Attacchi la guardia.\n3 - Desisti (nessuna delle due precedenti).");
+        System.out.println("---------------------------------------------------------");
+        char scelta = scScelta.nextLine().charAt(0);
+        switch(scelta){
+            case('1'):
+                if(bonus>=1){
+                    fine();
+                    break;
+                }else{
+                    System.out.println("GUARDIA:\n- Ciao straniero! Così il tuo nome è " + nomeGiocatore + "?");
+                    System.out.println("GUARDIA:\n- Mi dispiace, ma noi non facciamo entrare stranieri nella nostra città.");
+                    entrataCittà();
+                    break;
+                }
+            case('2'):
+                giocatoreHp--;
+                System.out.println("GUARDIA:\n- Non essere stupido.\n-*-*-*-");
+                System.out.println("La guardia ti ha colpito molto forte, ti sei arreso.\nQuesto ti ha causato un danno.");
+                System.out.println("La tua forza ora è: " + giocatoreHp + ".");
+                entrataCittà();
+                break;
+            case('3'):
+                incrocio();
+                break;
+            default:
+                entrataCittà();
+                break;
+        }
+    }
+
+@Override
+    public void incrocio(){
+        System.out.println("Scegli quale direzione prendere nel tuo cammino. Digita:\nN - Nord.\nE - Est.\nS - Sud.\nO - Ovest.");
+        char scelta = scScelta.nextLine().charAt(0);
+        switch(scelta){
+            case('N'):
+                nord();
+                break;
+            case('S'):
+                entrataCittà();
+                break;
+            case('E'):
+                est();
+                break;
+            case('O'):
+                ovest();
+                break;
+            default:
+                incrocio();
+                break;
+        }
+    }
+
+    @Override
+    public void est(){
+        if(nomeGuerriero == "Mister Robot"){
+            nomeGuerriero = "Big Java";
+            System.out.println("Ora il tuo avversario non sarà più Mister Robot: sarà " + nomeGuerriero + "!");
+            guerrieroHp = 15;
+        }
+        System.out.println("Sei in una foresta. Devi trovare Big Java!");
+        System.out.println("Digita 1 per tornare all'incrocio, digita un altro qualsiasi tasto per continnuare verso Est.");
+        char scelta = scScelta.nextLine().charAt(0);
+        switch(scelta){
+            case('1'):
+                incrocio();
+                break;
+            default:
+                est();
+                break;
+        }
+    }
+    @Override
+    public void ovest(){
+        System.out.println("ECCOLO! E' davanti a te! E' " + nomeGuerriero + "!!!");
+        System.out.println("Sei davanti a " + nomeGuerriero + "! Cosa vuoi fare? Digita 1 per combattere, digita 2 per fuggire.");
+        char scelta = scScelta.nextLine().charAt(0);
+        switch(scelta){
+            case('1'):
+                combatti();
+                break;
+            case('2'):
+                incrocio();
+                break;
+            default:
+                ovest();
+                break;
+        }
+    }
+
+    @Override
+    public void combatti(){
+        if(guerrieroHp>0){
+            System.out.println("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
+            System.out.println("La tua forza: " + giocatoreHp + ".\nLa forza di " + nomeGuerriero + ": " + guerrieroHp + ".");
+            System.out.println("Digitare 1 per attaccare, digitare 2 per tornare all'incrocio.");
+            char scelta = scScelta.nextLine().charAt(0);
+            switch(scelta){
+                case('1'):
+                    attacca();
+                    break;
+                case('2'):
+                    incrocio();
+                    break;
+                default:
+                    combatti();
+                    break;
+            }
+        }else{
+            guerrieroHp = 15;
+            combatti();
+        }
+    }
+
+    @Override
+    public void attacca(){
+        int playerDamage = 0;
+        if(nomeGuerriero == "Big Java"){
+            playerDamage = (int) (Math.random() * 8);
+        }
+        else{
+            playerDamage = (int) (Math.random() * 5);
+        }
+        System.out.println("Hai attacato l'avversario! Danno di " + playerDamage + " punti!");
+        guerrieroHp -= playerDamage;
+        System.out.println("La forza di " + nomeGuerriero + " è ora : " + guerrieroHp + ".");
+        if(guerrieroHp < 1){
+            vittoria();
+        }else{
+            int monsterDamage = new Random().nextInt(4);
+            System.out.println(nomeGuerriero + " ti ha attaccato! Hai subito un danno di " + monsterDamage + " punti!");
+            giocatoreHp -= monsterDamage;
+            System.out.println("La forza di " + nomeGiocatore + " è ora : " + giocatoreHp + ".");
+        }
+        if(giocatoreHp < 1){
+            sconfitta();
+        }else{
+            combatti();
+        }
+    }
+}
