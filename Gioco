@@ -1,0 +1,96 @@
+package org.example;
+
+import java.util.Scanner;
+
+public abstract class Gioco {
+    Scanner myScanner = new Scanner(System.in);
+    Scanner scScelta = new Scanner(System.in);
+    int giocatoreHp;
+    int guerrieroHp;
+    String nomeGiocatore;
+    String nomeGuerriero;
+    int bonus = 0;
+
+    public String giocatoreSetup(){
+        giocatoreHp = 10;
+        guerrieroHp = 15;
+        System.out.println("Inserisci il tuo nome: ");
+        nomeGiocatore = myScanner.nextLine();
+        boolean flag = false;
+        while(!flag){
+            System.out.println("Scegliere l'avversario, digitare:\n1 - per Mister Robot;\n2 - per Big Java;");
+            char scelta = scScelta.nextLine().charAt(0);
+            switch(scelta){
+                case('1'):
+                    nomeGuerriero = "Mister Robot";
+                    flag = true;
+                    break;
+                case('2'):
+                    nomeGuerriero = "Big Java";
+                    flag = true;
+                    break;
+                default:
+                    System.out.println("Scelta non valida.");
+                    break;
+            }
+        }
+        System.out.println("Il tuo Hp: " + giocatoreHp + ".\nIl tuo avversario: " + nomeGuerriero + ".");
+        System.out.println("Ciao " + nomeGiocatore + ", sei pronto per iniziare la partita!");
+        entrataCittà();
+        return nomeGiocatore;
+    }
+
+    public abstract void entrataCittà();
+    public abstract void incrocio();
+    public abstract void est();
+    public abstract void ovest();
+    public abstract void combatti();
+    public abstract void attacca();
+
+    public void nord(){
+        System.out.println("--------------------------------------------\nC'è un fiume: puoi bere acqua e stare a riva.");
+        System.out.println("Hai ripreso energia!");
+        giocatoreHp++;
+        System.out.println("La tua forza ora è: " + giocatoreHp + ".");
+        System.out.println("Digita 1 per tornare all'incrocio, digita un altro qualsiasi tasto per continuare verso Nord.");
+        System.out.println("--------------------------------------------");
+        char scelta = scScelta.nextLine().charAt(0);
+        switch(scelta){
+            case('1'):
+                incrocio();
+                break;
+            default:
+                nord();
+                break;
+        }
+    }
+    public void vittoria(){
+        System.out.println("--------------------------------------------\nHai sconfitto il mostro!");
+        System.out.println("***Hai ottenuto un BONUS!!!***");
+        bonus++;
+        System.out.println("Digita 1 per tornare all'incrocio.\n--------------------------------------------\n");
+        char scelta = scScelta.nextLine().charAt(0);
+        switch(scelta){
+            case('1'):
+                incrocio();
+                break;
+            default:
+                vittoria();
+                break;
+        }
+    }
+
+    public void sconfitta(){
+        System.out.println("--------------------------------------------\nSei stato sconfitto.");
+        System.out.println("*_*_*_*_*_GAME OVER *_*_*_*_*\n--------------------------------------------\n");
+        System.exit(0);
+    }
+
+    public void fine(){
+        System.out.println("--------------------------------------------\nGUARDIA:");
+        System.out.println("- Hai sconfitto quel goblin? Grandioso!");
+        System.out.println("Sembri un personaggio affidabile. Benvenuto nella nostra città!\n");
+        System.out.println("******** THE END ********\n--------------------------------------------");
+        System.exit(0);
+    }
+}
